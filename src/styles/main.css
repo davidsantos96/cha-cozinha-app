@@ -36,6 +36,13 @@ html {
 body {
   min-height: 100dvh;
   background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(248, 241, 233, 0.80), rgba(248, 241, 233, 0.80)),
+    url('../../public/foto jul-lucas.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -201,13 +208,127 @@ body {
   border-color: var(--error);
 }
 
-/* ── Select custom arrow ── */
-.field-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23746A66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 40px;
+/* ── Custom select dropdown ── */
+.custom-select {
+  position: relative;
+}
+
+.custom-select__trigger {
+  width: 100%;
+  padding: 13px 40px 13px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  outline: none;
+  text-align: left;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.custom-select__trigger:focus,
+.custom-select.open .custom-select__trigger {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(185, 133, 91, 0.15);
+}
+
+.custom-select__trigger.error {
+  border-color: var(--error);
+  box-shadow: none;
+}
+
+.custom-select__text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.custom-select__text.placeholder {
+  color: #C4B5AC;
+}
+
+.custom-select__chevron {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-shrink: 0;
+  color: var(--accent);
+  pointer-events: none;
+  transition: transform 0.2s;
+}
+
+.custom-select.open .custom-select__chevron {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(59, 47, 47, 0.12);
+  max-height: 220px;
+  overflow-y: auto;
+  list-style: none;
+  z-index: 200;
+  padding: 4px 0;
+  display: none;
+}
+
+.custom-select.open .custom-select__list {
+  display: block;
+  animation: dropdownIn 0.15s ease;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.custom-select__option {
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1.4;
+}
+
+.custom-select__option:hover {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+
+.custom-select__option.selected {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.custom-select__list::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-select__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-select__list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+.custom-select__list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 /* ── Inline error text ── */
@@ -346,6 +467,12 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
+  transition: background 0.3s;
+}
+
+.success-icon.sad {
+  background: #FEF9C3;
+  font-size: 32px;
 }
 
 .success-title {
@@ -360,7 +487,39 @@ body {
   color: var(--text-secondary);
   line-height: 1.7;
   max-width: 320px;
-  margin: 0 auto;
+  margin: 0 auto 24px;
+}
+
+.success-details {
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.success-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.success-detail-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.success-detail-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -413,7 +572,8 @@ body {
   .hero-message  { font-size: 15px; max-width: 420px; }
   .form-card     { padding: 32px 28px; }
   .field-input,
-  .field-select  { font-size: 16px; }
+  .field-select,
+  .custom-select__trigger { font-size: 16px; }
   .toggle-btn    { font-size: 15px; padding: 14px 8px; }
   .submit-btn    { font-size: 16px; padding: 16px; }
   .success-card  { padding: 64px 32px 56px; }
@@ -436,7 +596,8 @@ body {
   .gift-counter  { font-size: 14px; }
   .field-label   { font-size: 14px; }
   .field-input,
-  .field-select  { font-size: 16px; padding: 14px 16px; }
+  .field-select,
+  .custom-select__trigger { font-size: 16px; padding: 14px 16px; }
   .toggle-btn    { font-size: 15px; padding: 14px 8px; }
   .submit-btn    { font-size: 16px; padding: 16px; }
   .success-card  { padding: 72px 40px 64px; }

@@ -71,9 +71,14 @@
 
         <div class="field" id="gift-field" style="display:none">
           <label class="field-label" for="presente">Escolha um presente</label>
-          <select class="field-select" id="presente" name="presente">
-            <option value="">Selecione um presente...</option>
-          </select>
+          <input type="hidden" id="presente-hidden" name="presente">
+          <div class="custom-select" id="presente-dropdown">
+            <button type="button" class="custom-select__trigger" id="presente" aria-haspopup="listbox" aria-expanded="false">
+              <span class="custom-select__text placeholder" id="presente-text">Selecione um presente...</span>
+              <svg class="custom-select__chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <ul class="custom-select__list" id="presente-list" role="listbox"></ul>
+          </div>
           <span class="field-error" id="error-presente"></span>
         </div>
 
@@ -89,11 +94,19 @@
 
     <!-- ── Success ───────────────────────────────────────────── -->
     <div class="success-card" id="success-section" style="display:none">
-      <div class="success-icon">✓</div>
+      <div class="success-icon" id="success-icon">✓</div>
       <h2 class="success-title">Confirmação recebida!</h2>
-      <p class="success-message" id="success-message">
-        Obrigado por fazer parte desse momento especial.
-      </p>
+      <p class="success-message" id="success-message"></p>
+      <div class="success-details" id="success-details">
+        <div class="success-detail-row">
+          <span class="success-detail-label">Nome</span>
+          <span class="success-detail-value" id="success-nome"></span>
+        </div>
+        <div class="success-detail-row" id="success-gift-row">
+          <span class="success-detail-label">Presente</span>
+          <span class="success-detail-value" id="success-presente"></span>
+        </div>
+      </div>
     </div>
 
     <footer class="footer">Feito com carinho para este momento especial</footer>
