@@ -191,7 +191,11 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
-        if (res.error === 'already_taken') {
+        if (res.error === 'already_confirmed') {
+          showBannerError(
+            'Este número de WhatsApp já possui uma confirmação registrada.'
+          );
+        } else if (res.error === 'already_taken') {
           showBannerError(
             'Este presente acabou de ser escolhido por outra pessoa. ' +
             'Por favor, selecione outro item da lista.'

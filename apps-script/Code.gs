@@ -74,6 +74,21 @@ function doPost(e) {
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
+    // ── Verificar confirmação duplicada por telefone ──────────────────────────
+    var sheetConfCheck = ss.getSheetByName(SHEET_CONFIRMACOES);
+    if (sheetConfCheck && sheetConfCheck.getLastRow() > 1) {
+      var telefoneSoDigitos = telefone.replace(/\D/g, '');
+      var confDados = sheetConfCheck.getRange(2, 1, sheetConfCheck.getLastRow() - 1, 2).getValues();
+      for (var c = 0; c < confDados.length; c++) {
+        var telRegistrado = String(confDados[c][1]).replace(/\D/g, '');
+        if (telRegistrado === telefoneSoDigitos) {
+          return ContentService
+            .createTextOutput(JSON.stringify({ ok: false, error: 'already_confirmed' }))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+    }
+
     // ── Reservar presente (apenas se confirmou presença e escolheu um item) ──
     if (presenca === 'sim' && presenteId) {
       var sheetPresentes = ss.getSheetByName(SHEET_PRESENTES);
