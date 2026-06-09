@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Chá de Cozinha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Hero ──────────────────────────────────────────────── -->
+    <header class="hero">
+      <div class="hero-tag">Você está convidado(a)</div>
+      <h1 class="hero-title" id="event-title">Chá de Cozinha</h1>
+      <p class="hero-host" id="event-host"></p>
+
+      <div class="hero-details">
+        <div class="hero-detail">
+          <span class="hero-detail-label">Data</span>
+          <span class="hero-detail-value" id="event-date"></span>
+        </div>
+        <span class="hero-detail-sep">·</span>
+        <div class="hero-detail">
+          <span class="hero-detail-label">Local</span>
+          <span class="hero-detail-value" id="event-location"></span>
+        </div>
+      </div>
+
+      <p class="hero-message" id="event-message"></p>
+    </header>
+
+    <!-- ── Form Card ─────────────────────────────────────────── -->
+    <main class="form-card" id="form-section">
+
+      <div class="gift-counter" id="gift-counter" style="display:none">
+        <span id="gift-count">0</span> presentes disponíveis
+      </div>
+
+      <form id="confirmation-form" novalidate>
+
+        <div class="field">
+          <label class="field-label" for="nome">Nome completo</label>
+          <input class="field-input" type="text" id="nome" name="nome"
+            placeholder="Seu nome" autocomplete="name">
+          <span class="field-error" id="error-nome"></span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="telefone">WhatsApp</label>
+          <input class="field-input" type="tel" id="telefone" name="telefone"
+            placeholder="(00) 00000-0000" autocomplete="tel" inputmode="numeric">
+          <span class="field-error" id="error-telefone"></span>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Você vai comparecer?</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-btn" id="btn-sim" data-value="sim">
+              Sim, estarei lá!
+            </button>
+            <button type="button" class="toggle-btn" id="btn-nao" data-value="nao">
+              Não poderei ir
+            </button>
+          </div>
+          <span class="field-error" id="error-presenca"></span>
+        </div>
+
+        <div class="field" id="gift-field" style="display:none">
+          <label class="field-label" for="presente">Escolha um presente</label>
+          <select class="field-select" id="presente" name="presente">
+            <option value="">Selecione um presente...</option>
+          </select>
+          <span class="field-error" id="error-presente"></span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span id="submit-text">Confirmar presença</span>
+          <span id="submit-spinner" class="spinner" style="display:none"></span>
+        </button>
+
+        <div class="error-banner" id="error-banner"></div>
+
+      </form>
+    </main>
+
+    <!-- ── Success ───────────────────────────────────────────── -->
+    <div class="success-card" id="success-section" style="display:none">
+      <div class="success-icon">✓</div>
+      <h2 class="success-title">Confirmação recebida!</h2>
+      <p class="success-message" id="success-message">
+        Obrigado por fazer parte desse momento especial.
+      </p>
+    </div>
+
+    <footer class="footer">Feito com carinho para este momento especial</footer>
+
+  </div><!-- /#app -->
+
+  <script src="src/scripts/api.js"></script>
+  <script src="src/scripts/validation.js"></script>
+  <script src="src/scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+/* ──────────────────────────────────────────────────────────
+   Reset & base
+────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:            #F8F1E9;
+  --card:          #FFFFFF;
+  --text-primary:  #3B2F2F;
+  --text-secondary:#746A66;
+  --accent:        #B9855B;
+  --accent-dark:   #9A6A42;
+  --accent-light:  #FBF0E6;
+  --success:       #157347;
+  --error:         #B42318;
+  --border:        #E5D8CE;
+  --input-bg:      #FDFAF7;
+  --radius:        16px;
+  --radius-sm:     8px;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--bg);
+}
+
+/* ──────────────────────────────────────────────────────────
+   Layout wrapper
+────────────────────────────────────────────────────────── */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hero section
+────────────────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 48px 8px 32px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.hero-host {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  min-height: 22px;
+}
+
+.hero-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.hero-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hero-detail-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.hero-detail-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-height: 20px;
+}
+
+.hero-detail-sep {
+  color: var(--border);
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.hero-message {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 360px;
+  margin: 0 auto;
+  min-height: 20px;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Form card
+────────────────────────────────────────────────────────── */
+.form-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+}
+
+/* ── Gift counter pill ── */
+.gift-counter {
+  text-align: center;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding: 10px 16px;
+  background: var(--accent-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+#gift-count {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ── Field wrapper ── */
+.field {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* ── Text / tel inputs ── */
+.field-input,
+.field-select {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-input::placeholder {
+  color: #C4B5AC;
+}
+
+.field-input:focus,
+.field-select:focus {
+  border-color: var(--accent);
+  background: #FFFFFF;
+}
+
+.field-input.error,
+.field-select.error {
+  border-color: var(--error);
+}
+
+/* ── Select custom arrow ── */
+.field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23746A66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+/* ── Inline error text ── */
+.field-error {
+  display: block;
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 5px;
+  min-height: 16px;
+}
+
+/* ── Presence toggle group ── */
+.toggle-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.toggle-btn {
+  padding: 13px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--input-bg);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.toggle-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Submit button ── */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 8px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.2s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Loading spinner ── */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error banner (below submit) ── */
+.error-banner {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--error);
+  text-align: center;
+  display: none;
+  line-height: 1.5;
+}
+
+.error-banner.visible {
+  display: block;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Success card
+────────────────────────────────────────────────────────── */
+.success-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 56px 24px 48px;
+  text-align: center;
+  animation: fadeUp 0.4s ease both;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #D1FAE5;
+  color: var(--success);
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.success-message {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Footer
+────────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  margin-top: 36px;
+  font-size: 12px;
+  color: var(--border);
+  letter-spacing: 0.02em;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Animations
+────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Responsividade
+────────────────────────────────────────────────────────── */
+
+/* ── Telas muito pequenas (< 360px) ── */
+@media (max-width: 360px) {
+  .hero          { padding: 32px 8px 24px; }
+  .hero-title    { font-size: 28px; }
+  .hero-message  { font-size: 13px; }
+  .form-card     { padding: 20px 14px; }
+  .toggle-btn    { font-size: 13px; padding: 11px 6px; }
+  .submit-btn    { font-size: 14px; padding: 13px; }
+}
+
+/* ── Smartphones (360px – 480px) — layout base ── */
+@media (min-width: 360px) and (max-width: 480px) {
+  .hero-title   { font-size: 32px; }
+  .form-card    { padding: 24px 18px; }
+}
+
+/* ── Tablets e telas médias (481px – 767px) ── */
+@media (min-width: 481px) and (max-width: 767px) {
+  #app {
+    max-width: 560px;
+    padding: 0 24px 56px;
+  }
+  .hero          { padding: 56px 16px 36px; }
+  .hero-title    { font-size: 40px; }
+  .hero-message  { font-size: 15px; max-width: 420px; }
+  .form-card     { padding: 32px 28px; }
+  .field-input,
+  .field-select  { font-size: 16px; }
+  .toggle-btn    { font-size: 15px; padding: 14px 8px; }
+  .submit-btn    { font-size: 16px; padding: 16px; }
+  .success-card  { padding: 64px 32px 56px; }
+  .success-title { font-size: 28px; }
+}
+
+/* ── Desktop (≥ 768px) ── */
+@media (min-width: 768px) {
+  #app {
+    max-width: 600px;
+    padding: 0 32px 72px;
+  }
+  .hero          { padding: 72px 24px 48px; }
+  .hero-title    { font-size: 44px; }
+  .hero-host     { font-size: 16px; }
+  .hero-message  { font-size: 15px; max-width: 460px; }
+  .hero-details  { gap: 24px; }
+  .form-card     { padding: 36px 32px; }
+  #gift-count    { font-size: 22px; }
+  .gift-counter  { font-size: 14px; }
+  .field-label   { font-size: 14px; }
+  .field-input,
+  .field-select  { font-size: 16px; padding: 14px 16px; }
+  .toggle-btn    { font-size: 15px; padding: 14px 8px; }
+  .submit-btn    { font-size: 16px; padding: 16px; }
+  .success-card  { padding: 72px 40px 64px; }
+  .success-icon  { width: 72px; height: 72px; font-size: 32px; }
+  .success-title { font-size: 30px; }
+  .success-message { font-size: 16px; max-width: 360px; }
+  .footer        { margin-top: 48px; font-size: 13px; }
+}
+
+/* ── Telas muito grandes (≥ 1024px) ── */
+@media (min-width: 1024px) {
+  #app { max-width: 640px; }
+}
