@@ -14,6 +14,7 @@
 
 var SHEET_PRESENTES    = 'Presentes';
 var SHEET_CONFIRMACOES = 'Confirmacoes';
+var SHEET_CONTRIBUICOES = 'Contribuicoes';
 
 // ── GET: retorna lista de presentes disponíveis ──────────────────────────────
 function doGet(e) {
@@ -70,9 +71,36 @@ function doPost(e) {
     var telefone  = (payload.telefone  || '').toString().trim();
     var presenca  = (payload.presenca  || '').toString();           // 'sim' | 'nao'
     var presenteId = payload.presenteId ? payload.presenteId.toString() : null;
+    var contributionType = payload.contributionType ? payload.contributionType.toString() : null; // 'present' | 'pix' | 'none'
     var presenteNome = '';
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    if (!nome || !telefone || (presenca !== 'sim' && presenca !== 'nao')) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'invalid_payload' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (presenca === 'nao' && !contributionType) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'contribution_required' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (presenca === 'nao' && ['present', 'pix', 'none'].indexOf(contributionType) === -1) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'invalid_contribution' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var shouldReserveGift = presenca === 'sim' || (presenca === 'nao' && contributionType === 'present');
+
+    if (shouldReserveGift && !presenteId) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'present_required' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
 
     // ── Verificar confirmação duplicada por telefone ──────────────────────────
     var sheetConfCheck = ss.getSheetByName(SHEET_CONFIRMACOES);
@@ -89,9 +117,14 @@ function doPost(e) {
       }
     }
 
-    // ── Reservar presente (apenas se confirmou presença e escolheu um item) ──
-    if (presenca === 'sim' && presenteId) {
+    // ── Reservar presente (confirmado ou ausente que escolheu contribuir com presente) ──
+    if (shouldReserveGift && presenteId) {
       var sheetPresentes = ss.getSheetByName(SHEET_PRESENTES);
+      if (!sheetPresentes) {
+        return ContentService
+          .createTextOutput(JSON.stringify({ ok: false, error: 'present_sheet_not_found' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
       var dados = sheetPresentes.getDataRange().getValues();
       var linhaPresente = -1;
 
@@ -121,7 +154,7 @@ function doPost(e) {
       sheetPresentes.getRange(linhaPresente, 4).setValue('Escolhido');   // Status
       sheetPresentes.getRange(linhaPresente, 5).setValue(nome);          // Escolhido por
       sheetPresentes.getRange(linhaPresente, 6).setValue(telefone);      // Telefone
-      sheetPresentes.getRange(linhaPresente, 7).setValue('Confirmado');  // Presença
+      sheetPresentes.getRange(linhaPresente, 7).setValue(presenca === 'sim' ? 'Confirmado' : 'Não comparecerá');  // Presença
       sheetPresentes.getRange(linhaPresente, 8).setValue(new Date());    // Data
     }
 
@@ -141,6 +174,18 @@ function doPost(e) {
       new Date()
     ]);
 
+    if (presenca === 'nao') {
+      var sheetContrib = getOrCreateContribuicoesSheet_(ss);
+      sheetContrib.appendRow([
+        nome,
+        telefone,
+        'Não comparecerá',
+        mapContributionType_(contributionType),
+        presenteNome,
+        new Date()
+      ]);
+    }
+
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -152,4 +197,19 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function getOrCreateContribuicoesSheet_(ss) {
+  var sheet = ss.getSheetByName(SHEET_CONTRIBUICOES);
+  if (sheet) return sheet;
+
+  sheet = ss.insertSheet(SHEET_CONTRIBUICOES);
+  sheet.appendRow(['Nome', 'Telefone', 'Presença', 'Tipo Contribuição', 'Presente', 'Data']);
+  return sheet;
+}
+
+function mapContributionType_(type) {
+  if (type === 'present') return 'Presente';
+  if (type === 'pix') return 'PIX';
+  return 'Nenhuma';
 }

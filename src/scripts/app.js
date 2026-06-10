@@ -11,6 +11,12 @@ var EVENT = {
             'Confirme sua presença e, se quiser, escolha um presente para nos ' +
             'ajudar a montar nossa nova cozinha.'
 };
+
+var PIX = {
+  key: '00020126360014BR.GOV.BCB.PIX0114+55119658847745204000053039865802BR5925Juliane Alves do Nascimen6009SAO PAULO62140510oEb5LK6st26304D089',
+  qrCodeUrl: 'public/QRCode-Ju.jpeg',
+  mobileLink: ''
+};
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -29,6 +35,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var btnSim           = document.getElementById('btn-sim');
   var btnNao           = document.getElementById('btn-nao');
   var giftField        = document.getElementById('gift-field');
+  var contributionField = document.getElementById('contribution-field');
+  var btnContribPresent = document.getElementById('btn-contrib-present');
+  var btnContribPix     = document.getElementById('btn-contrib-pix');
+  var btnContribNone    = document.getElementById('btn-contrib-none');
+  var pixField          = document.getElementById('pix-field');
+  var pixQrCode         = document.getElementById('pix-qrcode');
+  var pixKeyEl          = document.getElementById('pix-key');
+  var pixCopyBtn        = document.getElementById('pix-copy-btn');
+  var pixMobileLink     = document.getElementById('pix-mobile-link');
   var giftSelect       = document.getElementById('presente');       // trigger button
   var presenteHidden   = document.getElementById('presente-hidden');
   var presenteText     = document.getElementById('presente-text');
@@ -46,9 +61,12 @@ document.addEventListener('DOMContentLoaded', function () {
   var successNome      = document.getElementById('success-nome');
   var successPresente  = document.getElementById('success-presente');
   var successGiftRow   = document.getElementById('success-gift-row');
+  var successContribution = document.getElementById('success-contribution');
+  var successContributionRow = document.getElementById('success-contribution-row');
   var errorBanner      = document.getElementById('error-banner');
 
   var selectedPresenca = null;
+  var selectedContribution = null;
 
   // ── Máscara de telefone ────────────────────────────────────────────────────
   Validation.applyPhoneMask(telefoneInput);
@@ -96,7 +114,59 @@ document.addEventListener('DOMContentLoaded', function () {
     closeDropdown();
   }
 
+  function setContribution(value) {
+    selectedContribution = value;
+    btnContribPresent.classList.toggle('active', value === 'present');
+    btnContribPix.classList.toggle('active', value === 'pix');
+    btnContribNone.classList.toggle('active', value === 'none');
+    clearError('contribution');
+    updateGiftVisibility();
+  }
+
+  function resetContribution() {
+    selectedContribution = null;
+    btnContribPresent.classList.remove('active');
+    btnContribPix.classList.remove('active');
+    btnContribNone.classList.remove('active');
+    clearError('contribution');
+  }
+
+  function updateGiftVisibility() {
+    if (selectedPresenca === 'sim') {
+      giftField.style.display = 'block';
+      pixField.style.display = 'none';
+      return;
+    }
+
+    if (selectedPresenca === 'nao') {
+      if (selectedContribution === 'present') {
+        giftField.style.display = 'block';
+        pixField.style.display = 'none';
+        return;
+      }
+
+      giftField.style.display = 'none';
+      resetGiftSelect();
+      clearError('presente');
+      pixField.style.display = selectedContribution === 'pix' ? 'block' : 'none';
+    }
+  }
+
+  function setPixData() {
+    pixKeyEl.textContent = PIX.key || '-';
+    pixQrCode.src = PIX.qrCodeUrl || '';
+
+    if (PIX.mobileLink && PIX.mobileLink.indexOf('http') === 0) {
+      pixMobileLink.href = PIX.mobileLink;
+      pixMobileLink.style.display = 'inline-flex';
+    } else {
+      pixMobileLink.href = '#';
+      pixMobileLink.style.display = 'none';
+    }
+  }
+
   // ── Carregar presentes ao abrir a página ──────────────────────────────────
+  setPixData();
   loadGifts();
 
   function loadGifts() {
@@ -141,7 +211,9 @@ document.addEventListener('DOMContentLoaded', function () {
     btnSim.classList.add('active');
     btnNao.classList.remove('active');
     clearError('presenca');
-    giftField.style.display = 'block';
+    contributionField.style.display = 'none';
+    resetContribution();
+    updateGiftVisibility();
   });
 
   btnNao.addEventListener('click', function () {
@@ -149,10 +221,38 @@ document.addEventListener('DOMContentLoaded', function () {
     btnNao.classList.add('active');
     btnSim.classList.remove('active');
     clearError('presenca');
-    giftField.style.display = 'none';
+    contributionField.style.display = 'block';
     resetGiftSelect();
     clearError('presente');
-    submitForm();
+    resetContribution();
+    updateGiftVisibility();
+  });
+
+  btnContribPresent.addEventListener('click', function () {
+    setContribution('present');
+  });
+
+  btnContribPix.addEventListener('click', function () {
+    setContribution('pix');
+  });
+
+  btnContribNone.addEventListener('click', function () {
+    setContribution('none');
+  });
+
+  pixCopyBtn.addEventListener('click', function () {
+    var key = pixKeyEl.textContent || '';
+    if (!key || key === '-') return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(key).then(function () {
+        var originalText = pixCopyBtn.textContent;
+        pixCopyBtn.textContent = 'Copiado!';
+        setTimeout(function () {
+          pixCopyBtn.textContent = originalText;
+        }, 1500);
+      });
+    }
   });
 
   // ── Limpar erros inline ao digitar ────────────────────────────────────────
@@ -166,11 +266,15 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function submitForm() {
+    var shouldUseGift = selectedPresenca === 'sim' ||
+      (selectedPresenca === 'nao' && selectedContribution === 'present');
+
     var data = {
       nome:       nomeInput.value.trim(),
       telefone:   telefoneInput.value.trim(),
       presenca:   selectedPresenca,
-      presenteId: presenteHidden.value || null
+      presenteId: shouldUseGift ? (presenteHidden.value || null) : null,
+      contributionType: selectedPresenca === 'nao' ? selectedContribution : null
     };
 
     var result = Validation.validateForm(data);
@@ -187,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (res) {
         if (res.ok) {
           var gifLabel = presenteText.classList.contains('placeholder') ? null : presenteText.textContent;
-          showSuccess(data.presenca, data.nome, gifLabel);
+          showSuccess(data.presenca, data.nome, gifLabel, data.contributionType);
           return;
         }
 
@@ -227,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
     submitSpinner.style.display  = loading ? 'inline-block' : 'none';
   }
 
-  function showSuccess(presenca, nome, presenteNome) {
+  function showSuccess(presenca, nome, presenteNome, contributionType) {
     formSection.style.display    = 'none';
     successSection.style.display = 'block';
 
@@ -239,13 +343,25 @@ document.addEventListener('DOMContentLoaded', function () {
       successIcon.classList.add('sad');
     }
 
-    successMsg.textContent = presenca === 'sim'
-      ? 'Sua presença foi confirmada. Mal podemos esperar para te ver!'
-      : 'Obrigado por nos avisar. Sentiremos sua falta!';
+    if (presenca === 'sim') {
+      successMsg.textContent = 'Sua presença foi confirmada. Te esperamos lá!';
+      successContributionRow.style.display = 'none';
+    } else {
+      if (contributionType === 'present') {
+        successMsg.textContent = 'Obrigado por nos presentear mesmo sem comparecer!';
+      } else if (contributionType === 'pix') {
+        successMsg.textContent = 'Obrigado pela contribuição via PIX! Mas sentiremos falta da sua presença';
+      } else {
+        successMsg.textContent = 'Obrigado por nos avisar. Sentiremos sua falta! 😢';
+      }
+
+      successContribution.textContent = contributionLabel(contributionType);
+      successContributionRow.style.display = '';
+    }
 
     successNome.textContent = nome;
 
-    if (presenteNome) {
+    if (presenteNome && (presenca === 'sim' || contributionType === 'present')) {
       successPresente.textContent    = presenteNome;
       successGiftRow.style.display   = '';
     } else {
@@ -253,10 +369,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function contributionLabel(type) {
+    if (type === 'present') return 'Escolheu um presente';
+    if (type === 'pix') return 'Contribuição via PIX';
+    if (type === 'none') return 'Não contribuirá';
+    return '-';
+  }
+
   function displayErrors(errors) {
     Object.keys(errors).forEach(function (field) {
       var errorEl = document.getElementById('error-' + field);
       if (errorEl) errorEl.textContent = errors[field];
+
+      if (field === 'contribution') {
+        contributionField.classList.add('error-field');
+        return;
+      }
 
       var inputId = field === 'presente' ? 'presente' : field;
       var inputEl = document.getElementById(inputId);
@@ -273,13 +401,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var errorEl = document.getElementById('error-' + field);
     if (errorEl) errorEl.textContent = '';
 
+    if (field === 'contribution') {
+      contributionField.classList.remove('error-field');
+      return;
+    }
+
     var inputId = field === 'presente' ? 'presente' : field;
     var inputEl = document.getElementById(inputId);
     if (inputEl) inputEl.classList.remove('error');
   }
 
   function clearAllErrors() {
-    ['nome', 'telefone', 'presenca', 'presente'].forEach(clearError);
+    ['nome', 'telefone', 'presenca', 'presente', 'contribution'].forEach(clearError);
     hideBannerError();
   }
 

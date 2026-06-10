@@ -22,7 +22,7 @@ var Api = {
    * Envia a confirmação de presença e (opcionalmente) reserva um presente.
    * Usa Content-Type: text/plain para evitar preflight CORS com Apps Script.
    *
-   * @param {{nome: string, telefone: string, presenca: string, presenteId: string|null}} data
+    * @param {{nome: string, telefone: string, presenca: string, presenteId: string|null, contributionType: string|null}} data
    * @returns {Promise<{ok: boolean, error?: string}>}
    */
   submitConfirmation: function (data) {

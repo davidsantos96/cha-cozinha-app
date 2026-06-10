@@ -3,7 +3,7 @@
 var Validation = {
   /**
    * Valida os dados do formulário antes de enviar.
-   * @param {{nome: string, telefone: string, presenca: string|null, presenteId: string|null}} data
+    * @param {{nome: string, telefone: string, presenca: string|null, presenteId: string|null, contributionType: string|null}} data
    * @returns {{valid: boolean, errors: Object.<string, string>}}
    */
   validateForm: function (data) {
@@ -24,6 +24,16 @@ var Validation = {
 
     if (data.presenca === 'sim' && !data.presenteId) {
       errors.presente = 'Escolha um presente para reservar.';
+    }
+
+    if (data.presenca === 'nao') {
+      if (!data.contributionType) {
+        errors.contribution = 'Escolha como você deseja contribuir.';
+      }
+
+      if (data.contributionType === 'present' && !data.presenteId) {
+        errors.presente = 'Escolha um presente para reservar.';
+      }
     }
 
     return {

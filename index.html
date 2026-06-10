@@ -82,6 +82,37 @@
           <span class="field-error" id="error-presente"></span>
         </div>
 
+        <div class="field" id="contribution-field" style="display:none">
+          <label class="field-label">Como você gostaria de contribuir?</label>
+          <div class="contribution-group">
+            <button type="button" class="toggle-btn" id="btn-contrib-present" data-value="present">
+              Escolher presente
+            </button>
+            <button type="button" class="toggle-btn" id="btn-contrib-pix" data-value="pix">
+              Contribuir via PIX
+            </button>
+            <button type="button" class="toggle-btn" id="btn-contrib-none" data-value="none">
+              Deixar para depois
+            </button>
+          </div>
+          <span class="field-error" id="error-contribution"></span>
+        </div>
+
+        <div class="field" id="pix-field" style="display:none">
+          <div class="pix-card">
+            <div class="pix-card-title">Contribuição via PIX</div>
+            <img class="pix-qrcode" id="pix-qrcode" alt="QR Code PIX">
+            <div class="pix-key-label">Chave PIX</div>
+            <div class="pix-key-wrapper">
+              <span class="pix-key" id="pix-key">-</span>
+              <button type="button" class="pix-copy-btn" id="pix-copy-btn">Copiar</button>
+            </div>
+            <a class="pix-mobile-link" id="pix-mobile-link" href="#" target="_blank" rel="noopener noreferrer">
+              Abrir link PIX no celular
+            </a>
+          </div>
+        </div>
+
         <button type="submit" class="submit-btn" id="submit-btn">
           <span id="submit-text">Confirmar presença</span>
           <span id="submit-spinner" class="spinner" style="display:none"></span>
@@ -105,6 +136,10 @@
         <div class="success-detail-row" id="success-gift-row">
           <span class="success-detail-label">Presente</span>
           <span class="success-detail-value" id="success-presente"></span>
+        </div>
+        <div class="success-detail-row" id="success-contribution-row" style="display:none">
+          <span class="success-detail-label">Contribuição</span>
+          <span class="success-detail-value" id="success-contribution"></span>
         </div>
       </div>
     </div>
