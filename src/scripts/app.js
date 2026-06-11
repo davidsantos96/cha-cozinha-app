@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
     btnContribNone.classList.toggle('active', value === 'none');
     clearError('contribution');
     updateGiftVisibility();
+    updateSubmitText();
   }
 
   function resetContribution() {
@@ -129,6 +130,23 @@ document.addEventListener('DOMContentLoaded', function () {
     btnContribPix.classList.remove('active');
     btnContribNone.classList.remove('active');
     clearError('contribution');
+    updateSubmitText();
+  }
+
+  function updateSubmitText() {
+    if (selectedPresenca !== 'nao') {
+      submitText.textContent = 'Confirmar presença';
+      return;
+    }
+    if (selectedContribution === 'present') {
+      submitText.textContent = 'Confirmar e escolher presente';
+    } else if (selectedContribution === 'pix') {
+      submitText.textContent = 'Confirmar e contribuir via PIX';
+    } else if (selectedContribution === 'none') {
+      submitText.textContent = 'Confirmar mesmo assim';
+    } else {
+      submitText.textContent = 'Confirmar presença';
+    }
   }
 
   function updateGiftVisibility() {
@@ -214,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
     contributionField.style.display = 'none';
     resetContribution();
     updateGiftVisibility();
+    updateSubmitText();
   });
 
   btnNao.addEventListener('click', function () {
